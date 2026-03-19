@@ -1,0 +1,250 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --radius: 1rem;
+    /* Dark midnight blue theme (default) */
+    --background: 0.08 0.02 265;
+    --foreground: 0.96 0.02 230;
+    --card: 0.16 0.04 242;
+    --card-foreground: 0.96 0.02 230;
+    --popover: 0.14 0.04 242;
+    --popover-foreground: 0.96 0.02 230;
+    --primary: 0.77 0.14 207;
+    --primary-foreground: 0.08 0.03 250;
+    --secondary: 0.2 0.04 242;
+    --secondary-foreground: 0.96 0.02 230;
+    --muted: 0.2 0.04 242;
+    --muted-foreground: 0.68 0.03 240;
+    --accent: 0.82 0.15 200;
+    --accent-foreground: 0.08 0.03 250;
+    --destructive: 0.577 0.245 27.325;
+    --destructive-foreground: 0.985 0 0;
+    --border: 0.25 0.05 240;
+    --input: 0.22 0.05 240;
+    --ring: 0.77 0.14 207;
+    --chart-1: 0.77 0.14 207;
+    --chart-2: 0.6 0.118 184.704;
+    --chart-3: 0.398 0.07 227.392;
+    --chart-4: 0.828 0.189 84.429;
+    --chart-5: 0.769 0.188 70.08;
+    --sidebar: 0.12 0.03 260;
+    --sidebar-foreground: 0.96 0.02 230;
+    --sidebar-primary: 0.77 0.14 207;
+    --sidebar-primary-foreground: 0.08 0.03 250;
+    --sidebar-accent: 0.2 0.04 242;
+    --sidebar-accent-foreground: 0.96 0.02 230;
+    --sidebar-border: 0.25 0.05 240;
+    --sidebar-ring: 0.77 0.14 207;
+  }
+
+  [data-theme="light"] {
+    --background: 0.97 0.01 240;
+    --foreground: 0.18 0.04 240;
+    --card: 1 0 0;
+    --card-foreground: 0.18 0.04 240;
+    --popover: 0.99 0.01 240;
+    --popover-foreground: 0.18 0.04 240;
+    --primary: 0.62 0.16 207;
+    --primary-foreground: 0.98 0 0;
+    --secondary: 0.92 0.02 230;
+    --secondary-foreground: 0.18 0.04 240;
+    --muted: 0.93 0.01 230;
+    --muted-foreground: 0.52 0.04 240;
+    --accent: 0.62 0.16 207;
+    --accent-foreground: 0.98 0 0;
+    --destructive: 0.577 0.245 27.325;
+    --destructive-foreground: 0.985 0 0;
+    --border: 0.87 0.02 240;
+    --input: 0.87 0.02 240;
+    --ring: 0.62 0.16 207;
+    --chart-1: 0.62 0.16 207;
+    --chart-2: 0.6 0.118 184.704;
+    --chart-3: 0.398 0.07 227.392;
+    --chart-4: 0.828 0.189 84.429;
+    --chart-5: 0.769 0.188 70.08;
+    --sidebar: 0.95 0.01 240;
+    --sidebar-foreground: 0.18 0.04 240;
+    --sidebar-primary: 0.62 0.16 207;
+    --sidebar-primary-foreground: 0.98 0 0;
+    --sidebar-accent: 0.92 0.02 230;
+    --sidebar-accent-foreground: 0.18 0.04 240;
+    --sidebar-border: 0.87 0.02 240;
+    --sidebar-ring: 0.62 0.16 207;
+  }
+
+  [data-theme="dare"] {
+    --background: 0.07 0.04 20;
+    --foreground: 0.97 0.02 60;
+    --card: 0.12 0.05 20;
+    --card-foreground: 0.97 0.02 60;
+    --popover: 0.12 0.05 20;
+    --popover-foreground: 0.97 0.02 60;
+    --primary: 0.72 0.23 35;
+    --primary-foreground: 0.07 0 0;
+    --secondary: 0.17 0.05 20;
+    --secondary-foreground: 0.97 0.02 60;
+    --muted: 0.17 0.05 20;
+    --muted-foreground: 0.62 0.08 35;
+    --accent: 0.76 0.22 50;
+    --accent-foreground: 0.07 0 0;
+    --destructive: 0.7 0.24 20;
+    --destructive-foreground: 0.98 0 0;
+    --border: 0.27 0.09 25;
+    --input: 0.27 0.09 25;
+    --ring: 0.72 0.23 35;
+    --chart-1: 0.72 0.23 35;
+    --chart-2: 0.76 0.22 50;
+    --chart-3: 0.398 0.07 227.392;
+    --chart-4: 0.828 0.189 84.429;
+    --chart-5: 0.769 0.188 70.08;
+    --sidebar: 0.1 0.04 20;
+    --sidebar-foreground: 0.97 0.02 60;
+    --sidebar-primary: 0.72 0.23 35;
+    --sidebar-primary-foreground: 0.07 0 0;
+    --sidebar-accent: 0.17 0.05 20;
+    --sidebar-accent-foreground: 0.97 0.02 60;
+    --sidebar-border: 0.27 0.09 25;
+    --sidebar-ring: 0.72 0.23 35;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    color-scheme: dark;
+  }
+
+  [data-theme="light"] {
+    color-scheme: light;
+  }
+
+  body {
+    @apply text-foreground;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Dark theme body background */
+  :root body {
+    background: linear-gradient(160deg, #020617 0%, #030d22 50%, #071428 100%);
+  }
+
+  /* Light theme body background */
+  [data-theme="light"] body {
+    background: linear-gradient(160deg, #f0f7ff 0%, #e8f4fd 50%, #dbeeff 100%);
+  }
+
+  /* Dare theme body background */
+  [data-theme="dare"] body {
+    background: linear-gradient(160deg, #0d0200 0%, #180400 50%, #1f0300 100%);
+  }
+}
+
+@layer utilities {
+  /* Grid overlay for dark/dare themes */
+  .bg-grid-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image: linear-gradient(
+        rgba(56, 189, 248, 0.03) 1px,
+        transparent 1px
+      ), linear-gradient(90deg, rgba(56, 189, 248, 0.03) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  [data-theme="dare"] .bg-grid-overlay {
+    background-image: linear-gradient(
+        rgba(250, 80, 30, 0.04) 1px,
+        transparent 1px
+      ), linear-gradient(90deg, rgba(250, 80, 30, 0.04) 1px, transparent 1px);
+  }
+
+  [data-theme="light"] .bg-grid-overlay {
+    background-image: linear-gradient(
+        rgba(56, 189, 248, 0.06) 1px,
+        transparent 1px
+      ), linear-gradient(90deg, rgba(56, 189, 248, 0.06) 1px, transparent 1px);
+  }
+
+  /* Glassmorphism card styles */
+  .glass-card {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    background: rgba(15, 35, 54, 0.65);
+    border: 1px solid rgba(56, 189, 248, 0.12);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0
+      rgba(255, 255, 255, 0.05);
+  }
+
+  [data-theme="light"] .glass-card {
+    background: rgba(255, 255, 255, 0.88);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08), inset 0 1px 0
+      rgba(255, 255, 255, 0.9);
+  }
+
+  [data-theme="dare"] .glass-card {
+    background: rgba(35, 6, 3, 0.75);
+    border: 1px solid rgba(250, 80, 30, 0.18);
+    box-shadow: 0 8px 32px rgba(200, 30, 0, 0.25), 0 0 60px
+      rgba(250, 80, 30, 0.06), inset 0 1px 0 rgba(255, 100, 30, 0.07);
+  }
+
+  /* Neon glow effects */
+  .neon-glow {
+    box-shadow: 0 0 20px oklch(var(--primary) / 0.35), 0 0 60px
+      oklch(var(--primary) / 0.12);
+  }
+
+  [data-theme="dare"] .neon-glow {
+    box-shadow: 0 0 25px oklch(var(--primary) / 0.55), 0 0 80px
+      oklch(var(--primary) / 0.2), 0 0 120px oklch(var(--primary) / 0.08);
+  }
+
+  .neon-text {
+    color: oklch(var(--primary));
+    text-shadow: 0 0 12px oklch(var(--primary) / 0.7);
+  }
+
+  [data-theme="dare"] .neon-text {
+    text-shadow: 0 0 20px oklch(var(--primary) / 1), 0 0 40px
+      oklch(var(--primary) / 0.6);
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: oklch(var(--border));
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: oklch(var(--primary) / 0.5);
+  }
+
+  /* Progress bar glow */
+  .progress-bar-glow {
+    box-shadow: 0 0 12px oklch(var(--primary) / 0.6), 0 0 24px
+      oklch(var(--primary) / 0.3);
+  }
+
+  [data-theme="dare"] .progress-bar-glow {
+    box-shadow: 0 0 20px oklch(var(--primary) / 0.8), 0 0 40px
+      oklch(var(--primary) / 0.5);
+  }
+}
