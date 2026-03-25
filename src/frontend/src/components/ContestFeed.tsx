@@ -1,6 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ExternalLink, Link2, Plus, Trash2, Trophy } from "lucide-react";
+import {
+  ExternalLink,
+  Link2,
+  Plus,
+  RefreshCw,
+  Trash2,
+  Trophy,
+} from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -35,42 +42,7 @@ const PLATFORM_STYLES: Record<string, { badge: string; dot: string }> = {
   },
 };
 
-const UPCOMING_CONTESTS: Contest[] = [
-  {
-    platform: "CodeChef",
-    name: "Starters 185",
-    date: "Mar 18, 2026",
-    time: "8:00 PM IST",
-    registerUrl: "https://www.codechef.com/START185",
-  },
-  {
-    platform: "Codeforces",
-    name: "Round 1000 (Div. 2)",
-    date: "Mar 19, 2026",
-    time: "7:35 PM IST",
-    registerUrl: "https://codeforces.com/contests",
-  },
-  {
-    platform: "LeetCode",
-    name: "Biweekly Contest 155",
-    date: "Mar 21, 2026",
-    time: "8:00 PM IST",
-    registerUrl: "https://leetcode.com/contest",
-  },
-  {
-    platform: "Codeforces",
-    name: "Round 1001 (Div. 1+2)",
-    date: "Mar 21, 2026",
-    time: "10:05 PM IST",
-    registerUrl: "https://codeforces.com/contests",
-  },
-  {
-    platform: "LeetCode",
-    name: "Weekly Contest 442",
-    date: "Mar 22, 2026",
-    time: "8:00 AM IST",
-    registerUrl: "https://leetcode.com/contest",
-  },
+const ALL_CONTESTS: Contest[] = [
   {
     platform: "CodeChef",
     name: "Starters 186",
@@ -92,6 +64,55 @@ const UPCOMING_CONTESTS: Contest[] = [
     time: "8:00 AM IST",
     registerUrl: "https://leetcode.com/contest",
   },
+  {
+    platform: "LeetCode",
+    name: "Biweekly Contest 156",
+    date: "Apr 4, 2026",
+    time: "8:00 PM IST",
+    registerUrl: "https://leetcode.com/contest",
+  },
+  {
+    platform: "CodeChef",
+    name: "Starters 187",
+    date: "Apr 1, 2026",
+    time: "8:00 PM IST",
+    registerUrl: "https://www.codechef.com/START187",
+  },
+  {
+    platform: "Codeforces",
+    name: "Round 1002 (Div. 2)",
+    date: "Apr 3, 2026",
+    time: "7:35 PM IST",
+    registerUrl: "https://codeforces.com/contests",
+  },
+  {
+    platform: "LeetCode",
+    name: "Weekly Contest 444",
+    date: "Apr 5, 2026",
+    time: "8:00 AM IST",
+    registerUrl: "https://leetcode.com/contest",
+  },
+  {
+    platform: "Codeforces",
+    name: "Round 1003 (Div. 1)",
+    date: "Apr 8, 2026",
+    time: "10:05 PM IST",
+    registerUrl: "https://codeforces.com/contests",
+  },
+  {
+    platform: "CodeChef",
+    name: "Starters 188",
+    date: "Apr 8, 2026",
+    time: "8:00 PM IST",
+    registerUrl: "https://www.codechef.com/START188",
+  },
+  {
+    platform: "LeetCode",
+    name: "Weekly Contest 445",
+    date: "Apr 12, 2026",
+    time: "8:00 AM IST",
+    registerUrl: "https://leetcode.com/contest",
+  },
 ];
 
 function getDaysLeft(dateStr: string): number {
@@ -101,6 +122,10 @@ function getDaysLeft(dateStr: string): number {
   return Math.ceil(
     (contestDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
   );
+}
+
+function getUpcomingContests(): Contest[] {
+  return ALL_CONTESTS.filter((c) => getDaysLeft(c.date) >= 0);
 }
 
 function DaysLeftBadge({ dateStr }: { dateStr: string }) {
@@ -132,6 +157,13 @@ function DaysLeftBadge({ dateStr }: { dateStr: string }) {
 }
 
 export default function ContestFeed() {
+  const [contests, setContests] = useState<Contest[]>(getUpcomingContests);
+  const [refreshing, setRefreshing] = useState(false);
+  const [lastRefreshed, setLastRefreshed] = useLocalStorage<string>(
+    "dmc-contests-last-refreshed",
+    new Date().toLocaleDateString(),
+  );
+
   const [profileLinks, setProfileLinks] = useLocalStorage<ProfileLink[]>(
     "dmc-profiles",
     [
@@ -150,6 +182,20 @@ export default function ContestFeed() {
   );
   const [newLabel, setNewLabel] = useState("");
   const [newUrl, setNewUrl] = useState("");
+
+  function handleRefresh() {
+    setRefreshing(true);
+    setTimeout(() => {
+      const updated = getUpcomingContests();
+      setContests(updated);
+      const today = new Date().toLocaleDateString();
+      setLastRefreshed(today);
+      setRefreshing(false);
+      toast.success(
+        `Contest feed refreshed! ${updated.length} upcoming contests found.`,
+      );
+    }, 900);
+  }
 
   function addLink() {
     if (!newLabel.trim() || !newUrl.trim()) {
@@ -181,7 +227,21 @@ export default function ContestFeed() {
           <h2 className="text-base font-bold text-foreground">
             Live Contest Feed
           </h2>
-          <span className="ml-auto">
+          <span className="ml-auto flex items-center gap-2">
+            <span className="text-[9px] text-muted-foreground hidden sm:block">
+              Updated: {lastRefreshed}
+            </span>
+            <button
+              type="button"
+              onClick={handleRefresh}
+              disabled={refreshing}
+              title="Refresh contests"
+              className="p-1 rounded-md hover:bg-primary/10 text-primary transition-colors disabled:opacity-50"
+            >
+              <RefreshCw
+                className={`w-3.5 h-3.5 ${refreshing ? "animate-spin" : ""}`}
+              />
+            </button>
             <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-primary/15 text-primary border border-primary/25 font-medium animate-pulse-glow">
               <span className="w-1.5 h-1.5 rounded-full bg-primary inline-block" />
               LIVE
@@ -189,53 +249,59 @@ export default function ContestFeed() {
           </span>
         </div>
 
-        <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
-          {UPCOMING_CONTESTS.map((contest, i) => {
-            const styles = PLATFORM_STYLES[contest.platform];
-            return (
-              <motion.div
-                key={`${contest.platform}-${contest.name}`}
-                data-ocid={`contests.item.${i + 1}`}
-                initial={{ opacity: 0, x: -12 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.05, duration: 0.3 }}
-                className="flex items-center gap-3 p-2.5 rounded-xl bg-muted/20 border border-border hover:border-primary/25 hover:bg-primary/5 transition-all duration-200 group"
-              >
-                <div
-                  className={`w-2 h-2 rounded-full flex-shrink-0 ${styles.dot}`}
-                />
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span
-                      className={`text-[10px] px-1.5 py-0.5 rounded-md border font-semibold ${styles.badge}`}
-                    >
-                      {contest.platform}
-                    </span>
-                    <span className="text-xs font-medium text-foreground truncate">
-                      {contest.name}
-                    </span>
-                  </div>
-                  <div className="text-[10px] text-muted-foreground mt-0.5">
-                    {contest.date} &bull; {contest.time}
-                  </div>
-                  <div className="mt-1">
-                    <DaysLeftBadge dateStr={contest.date} />
-                  </div>
-                </div>
-                <a
-                  href={contest.registerUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  data-ocid={`contests.link.${i + 1}`}
-                  className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                  title="Register"
+        {contests.length === 0 ? (
+          <div className="text-center py-8 text-muted-foreground text-xs">
+            No upcoming contests right now. Check back later or refresh.
+          </div>
+        ) : (
+          <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
+            {contests.map((contest, i) => {
+              const styles = PLATFORM_STYLES[contest.platform];
+              return (
+                <motion.div
+                  key={`${contest.platform}-${contest.name}`}
+                  data-ocid={`contests.item.${i + 1}`}
+                  initial={{ opacity: 0, x: -12 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.05, duration: 0.3 }}
+                  className="flex items-center gap-3 p-2.5 rounded-xl bg-muted/20 border border-border hover:border-primary/25 hover:bg-primary/5 transition-all duration-200 group"
                 >
-                  <ExternalLink className="w-3.5 h-3.5 text-primary" />
-                </a>
-              </motion.div>
-            );
-          })}
-        </div>
+                  <div
+                    className={`w-2 h-2 rounded-full flex-shrink-0 ${styles.dot}`}
+                  />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span
+                        className={`text-[10px] px-1.5 py-0.5 rounded-md border font-semibold ${styles.badge}`}
+                      >
+                        {contest.platform}
+                      </span>
+                      <span className="text-xs font-medium text-foreground truncate">
+                        {contest.name}
+                      </span>
+                    </div>
+                    <div className="text-[10px] text-muted-foreground mt-0.5">
+                      {contest.date} &bull; {contest.time}
+                    </div>
+                    <div className="mt-1">
+                      <DaysLeftBadge dateStr={contest.date} />
+                    </div>
+                  </div>
+                  <a
+                    href={contest.registerUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-ocid={`contests.link.${i + 1}`}
+                    className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                    title="Register"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5 text-primary" />
+                  </a>
+                </motion.div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* Profile Link Manager Card */}

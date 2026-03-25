@@ -6,7 +6,6 @@ import CodingTimetable from "./components/CodingTimetable";
 import ConsistencyTracker from "./components/ConsistencyTracker";
 import ContestFeed from "./components/ContestFeed";
 import DailyQuestions from "./components/DailyQuestions";
-import FloatingAIBubble from "./components/FloatingAIBubble";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import LoginPage from "./components/LoginPage";
@@ -193,7 +192,6 @@ export default function App() {
         completedToday={completedToday}
         streak={streak}
       />
-      <FloatingAIBubble />
     </div>
   );
 }
