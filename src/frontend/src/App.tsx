@@ -11,6 +11,7 @@ import Footer from "./components/Footer";
 import Header from "./components/Header";
 import LoginPage from "./components/LoginPage";
 import MascotCompanion from "./components/MascotCompanion";
+import PDFProblemsPanel from "./components/PDFProblemsPanel";
 import { getTodayKey } from "./data/questionPool";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { useProfile } from "./hooks/useProfile";
@@ -170,6 +171,16 @@ export default function App() {
             >
               <DailyQuestions dayNumber={currentDay} />
             </motion.div>
+          </motion.div>
+
+          {/* PDF Problems row */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.7 }}
+            className="mt-5"
+          >
+            <PDFProblemsPanel />
           </motion.div>
         </main>
 

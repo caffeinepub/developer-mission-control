@@ -91,6 +91,14 @@ export default function MascotCompanion({
     return false;
   });
 
+  const [followCursor, setFollowCursor] = useState(() => {
+    try {
+      const stored = localStorage.getItem("dmc-mascot-follow");
+      return stored === null ? true : stored !== "false";
+    } catch {}
+    return true;
+  });
+
   const [isFirstTime] = useState(() => !localStorage.getItem("dmc-mascot"));
   const [showBubble, setShowBubble] = useState(false);
   const [showSelector, setShowSelector] = useState(false);
@@ -119,16 +127,14 @@ export default function MascotCompanion({
   const msgCount = messages.length;
   const currentMascot = MASCOTS.find((m) => m.type === mascot)!;
 
-  // Track mouse
+  // Track mouse — always update targetRef so re-enabling follow is smooth
   useEffect(() => {
     function onMouseMove(e: MouseEvent) {
-      if (!isSleeping) {
-        targetRef.current = { x: e.clientX + 16, y: e.clientY + 16 };
-      }
+      targetRef.current = { x: e.clientX + 16, y: e.clientY + 16 };
     }
     window.addEventListener("mousemove", onMouseMove);
     return () => window.removeEventListener("mousemove", onMouseMove);
-  }, [isSleeping]);
+  }, []);
 
   // Lerp animation loop
   useEffect(() => {
@@ -142,12 +148,15 @@ export default function MascotCompanion({
       const maxX = window.innerWidth - size;
       const maxY = window.innerHeight - size;
 
-      let targetX = targetRef.current.x;
-      let targetY = targetRef.current.y;
+      let targetX: number;
+      let targetY: number;
 
-      if (isSleeping) {
+      if (isSleeping || !followCursor) {
         targetX = window.innerWidth - 88;
         targetY = window.innerHeight - 88;
+      } else {
+        targetX = targetRef.current.x;
+        targetY = targetRef.current.y;
       }
 
       const newX = Math.max(
@@ -168,7 +177,7 @@ export default function MascotCompanion({
     return () => {
       if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
     };
-  }, [isSleeping]);
+  }, [isSleeping, followCursor]);
 
   // Rotate messages every 8 seconds
   useEffect(() => {
@@ -215,6 +224,12 @@ export default function MascotCompanion({
       setShowBubble(false);
       setShowSelector(false);
     }
+  }
+
+  function toggleFollow() {
+    const next = !followCursor;
+    setFollowCursor(next);
+    localStorage.setItem("dmc-mascot-follow", String(next));
   }
 
   const fullMessage = currentMascot.prefix + messages[msgIndex];
@@ -462,6 +477,24 @@ export default function MascotCompanion({
               data-ocid="mascot.toggle"
             >
               {isSleeping ? "Wake up" : "💤 Sleep"}
+            </motion.button>
+          )}
+        </AnimatePresence>
+
+        {/* Follow cursor toggle button */}
+        <AnimatePresence>
+          {isHovered && !isSleeping && (
+            <motion.button
+              type="button"
+              initial={{ opacity: 0, scale: 0.7 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.7 }}
+              transition={{ duration: 0.15 }}
+              onClick={toggleFollow}
+              className="absolute -bottom-7 left-1/2 -translate-x-1/2 rounded-full bg-muted/80 border border-border/60 px-1.5 py-0.5 text-[9px] font-medium hover:bg-muted transition-colors z-10 whitespace-nowrap"
+              data-ocid="mascot.secondary_button"
+            >
+              {followCursor ? "📌 Stay" : "🖱 Follow"}
             </motion.button>
           )}
         </AnimatePresence>
